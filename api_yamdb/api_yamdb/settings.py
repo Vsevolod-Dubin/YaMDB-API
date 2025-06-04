@@ -22,7 +22,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'users',
     'works',
-    'api',
     'reviews.apps.ReviewsConfig',
     'api.apps.ApiConfig',
 ]
