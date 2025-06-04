@@ -1,8 +1,6 @@
-# api_yamdb/api/apps.py
-
 from django.apps import AppConfig
 
 
-class ApiConfig(AppConfig):
+class ReviewsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'api'
+    name = 'reviews'

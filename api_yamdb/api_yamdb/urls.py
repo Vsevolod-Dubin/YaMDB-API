@@ -1,5 +1,7 @@
+# /api_yamdb/api_yamdb/urls.py
+
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 from django.views.generic import TemplateView
 
 
@@ -11,5 +13,5 @@ urlpatterns = [
         TemplateView.as_view(template_name='redoc.html'),
         name='redoc'
     ),
-    path('api/v1/', include('api.urls')),
+    path('api/v1/', include('reviews.urls')),
 ]
