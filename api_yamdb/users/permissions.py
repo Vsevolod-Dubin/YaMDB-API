@@ -15,5 +15,7 @@ class IsAdminOrReadOnly(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         return bool(
-            request.user and request.user.is_authenticated and request.user.is_staff
+            request.user
+            and request.user.is_authenticated
+            and request.user.is_staff
         )
