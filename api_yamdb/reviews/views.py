@@ -5,19 +5,13 @@ from django.db.models import Avg
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
+from users.permissions import IsAuthorOrModeratorOrAdminOrReadOnly
 from reviews.models import Review
 from reviews.serializers import (
     ReviewSerializer,
     CommentSerializer,
     TitleSerializer)
-from reviews.models import Title  # временная заглушка
-
-
-class TitleViewSet(viewsets.ModelViewSet):
-    serializer_class = TitleSerializer
-
-    def get_queryset(self):
-        return Title.objects.annotate(rating=Avg('reviews__score'))
+from works.models import Title
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -26,7 +20,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
     Позволяет создавать, читать, обновлять и удалять отзывы.
     """
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrModeratorOrAdminOrReadOnly]
 
     def get_queryset(self):
         title = get_object_or_404(Title, id=self.kwargs.get('title_id'))
@@ -43,7 +37,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     Позволяет создавать, читать, обновлять и удалять комментарии.
     """
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrModeratorOrAdminOrReadOnly]
 
     def get_queryset(self):
         review = get_object_or_404(Review, id=self.kwargs.get('review_id'))

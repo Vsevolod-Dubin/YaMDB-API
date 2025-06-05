@@ -3,20 +3,10 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
+from works.models import Title
 
 
 User = get_user_model()
-
-
-class Title(models.Model):
-    name = models.CharField(max_length=256)
-    rating = models.IntegerField(
-        null=True,
-        verbose_name='Рейтинг'
-    )
-
-    class Meta:
-        managed = False
 
 
 class Review(models.Model):

@@ -5,9 +5,11 @@ from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 from django.core.exceptions import ValidationError
+from django.db.models import Avg
 import csv
 from works.models import Title, Category, Genre
 from .serializers import TitleSerializer, CategorySerializer, GenreSerializer
+from users.permissions import IsAdminOrReadOnly
 
 
 def load_csv_data(file_path, model_class, serializer_class):
@@ -29,7 +31,7 @@ def load_csv_data(file_path, model_class, serializer_class):
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
 
     @action(detail=False, methods=['post'])
     def import_data(self, request):
@@ -41,7 +43,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
 
     @action(detail=False, methods=['post'])
     def import_data(self, request):
@@ -51,9 +53,9 @@ class GenreViewSet(viewsets.ModelViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
+    queryset = Title.objects.annotate(rating=Avg('reviews__score'))
     serializer_class = TitleSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrReadOnly]
 
     @action(detail=True, methods=['post'])
     def genres(self, request, pk=None):
