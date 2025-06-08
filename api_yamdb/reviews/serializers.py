@@ -1,8 +1,7 @@
 # reviews/serializers.py
 
 from rest_framework import serializers
-from reviews.models import Review, Comment
-from works.models import Title
+from reviews.models import Review, Comment, Title
 
 
 class TitleSerializer(serializers.ModelSerializer):
