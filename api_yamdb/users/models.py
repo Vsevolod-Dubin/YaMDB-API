@@ -3,14 +3,14 @@ from django.db import models
 
 
 class User(AbstractUser):
-    USER = 'user'
-    MODERATOR = 'moderator'
-    ADMIN = 'admin'
+    USER = "user"
+    MODERATOR = "moderator"
+    ADMIN = "admin"
 
     ROLE_CHOICES = (
-        (USER, 'User'),
-        (MODERATOR, 'Moderator'),
-        (ADMIN, 'Admin'),
+        (USER, "User"),
+        (MODERATOR, "Moderator"),
+        (ADMIN, "Admin"),
     )
 
     email = models.EmailField(unique=True)
