@@ -1,19 +1,9 @@
-<<<<<<< HEAD
-from pathlib import Path
-
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'p&l%385148kslhtyn^##a1)ilz@4zqj=rq&agdol^##zgl9(vs'
-=======
 from datetime import timedelta
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "p&l%385148kslhtyn^##a1)ilz@4zqj=rq&agdol^##zgl9(vs"
->>>>>>> develop
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -24,14 +14,6 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
-<<<<<<< HEAD
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-=======
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -43,7 +25,6 @@ INSTALLED_APPS = [
     "users",
     "reviews.apps.ReviewsConfig",
     "api.apps.ApiConfig",
->>>>>>> develop
 ]
 
 MIDDLEWARE = [
@@ -87,10 +68,7 @@ DATABASES = {
     }
 }
 
-<<<<<<< HEAD
-=======
 AUTH_USER_MODEL = "users.User"
->>>>>>> develop
 
 # Password validation
 
@@ -109,10 +87,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-<<<<<<< HEAD
-
-# Internationalization
-=======
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -130,7 +104,6 @@ SIMPLE_JWT = {
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "admin_yamdb@mail.ru"
->>>>>>> develop
 
 LANGUAGE_CODE = "en-us"
 
@@ -143,12 +116,6 @@ USE_L10N = True
 USE_TZ = True
 
 
-<<<<<<< HEAD
-# Static files (CSS, JavaScript, Images)
-
-STATIC_URL = '/static/'
-=======
 STATIC_URL = "/static/"
->>>>>>> develop
 
 STATICFILES_DIRS = ((BASE_DIR / "static/"),)
