@@ -6,12 +6,11 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from users.permissions import IsAuthorOrModeratorOrAdminOrReadOnly
-from reviews.models import Review
+from reviews.models import Review, Title
 from reviews.serializers import (
     ReviewSerializer,
     CommentSerializer,
     TitleSerializer)
-from works.models import Title
 
 
 class ReviewViewSet(viewsets.ModelViewSet):

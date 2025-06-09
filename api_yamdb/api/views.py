@@ -1,88 +1,51 @@
-from rest_framework import viewsets, mixins
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from django.shortcuts import get_object_or_404
-from django.db import transaction
-from django.core.exceptions import ValidationError
 from django.db.models import Avg
-import csv
-from works.models import Title, Category, Genre
-from .serializers import TitleSerializer, CategorySerializer, GenreSerializer
-from users.permissions import IsAdminOrReadOnly
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, mixins, filters
+
+from api.permissions import TitlePermission
+from api.filters import TitleFilter
+from api.serializers import TitleSerializer, TitleCreateSerializer, CategorySerializer, GenreSerializer
+from reviews.models import Title, Category, Genre
 
 
-def load_csv_data(file_path, model_class, serializer_class):
-    try:
-        with open(file_path, newline='') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                try:
-                    obj, created = model_class.objects.update_or_create(
-                        slug=row['slug'],
-                        defaults=dict(row)
-                    )
-                except ValidationError as e:
-                    print(f"Ошибка при загрузке данных: {e}")
-    except FileNotFoundError:
-        print(f"Файл не найден: {file_path}")
+class CreateDestroyViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet
+):
+    pass
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(CreateDestroyViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-    @action(detail=False, methods=['post'])
-    def import_data(self, request):
-        file_path = 'api_yamdb/static/data/categories.csv'
-        load_csv_data(file_path, Category, CategorySerializer)
-        return Response({'status': 'Данные успешно импортированы'})
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
+    permission_classes = (TitlePermission,)
+    lookup_field = 'slug'
 
 
-class GenreViewSet(viewsets.ModelViewSet):
+class GenreViewSet(CreateDestroyViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-    @action(detail=False, methods=['post'])
-    def import_data(self, request):
-        file_path = 'api_yamdb/static/data/genres.csv'
-        load_csv_data(file_path, Genre, GenreSerializer)
-        return Response({'status': 'Данные успешно импортированы'})
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
+    permission_classes = (TitlePermission,)
+    lookup_field = 'slug'
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.annotate(rating=Avg('reviews__score'))
+    queryset = Title.objects.all().annotate(
+        rating=Avg("reviews__score")
+    ).order_by("name")
     serializer_class = TitleSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = TitleFilter
+    permission_classes = (TitlePermission,)
+    http_method_names = ['get', 'post', 'delete', 'patch']
 
-    @action(detail=True, methods=['post'])
-    def genres(self, request, pk=None):
-        title = get_object_or_404(Title, pk=pk)
-        genre_ids = request.data.get('genres', [])
-        title.genres.set(genre_ids)
-        return Response(GenreSerializer(title.genres.all(), many=True).data)
-
-    @action(detail=False, methods=['post'])
-    def import_data(self, request):
-        file_path = 'api_yamdb/static/data/titles.csv'
-        try:
-            with open(file_path, newline='') as csvfile:
-                reader = csv.DictReader(csvfile)
-                for row in reader:
-                    title = Title.objects.create(
-                        name=row['name'],
-                        year=int(row['year']),
-                        category=Category.objects.get(slug=row['category']),
-                        description=row['description']
-                    )
-                    genre_slugs = row['genre'].split(',')
-                    for slug in genre_slugs:
-                        genre = Genre.objects.get(slug=slug)
-                        title.genres.add(genre)
-            return Response({'status': 'Данные успешно импортированы'}, status=201)
-        except FileNotFoundError:
-            return Response({'error': 'Файл не найден'}, status=404)
-        except Exception as e:
-            return Response({'error': f'Произошла ошибка: {str(e)}'}, status=500)
+    def get_serializer_class(self):
+        if self.action in ('list', 'retrieve'):
+            return TitleSerializer
+        return TitleCreateSerializer

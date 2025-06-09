@@ -1,12 +1,133 @@
-# api_yamdb/reviews/models.py
+from datetime import datetime
 
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator, MaxValueValidator
-from works.models import Title
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 User = get_user_model()
+
+
+class Category(models.Model):
+    name = models.CharField(
+        max_length=256,
+        verbose_name='Категория',
+        help_text='Название категории, к которой относится произведение',
+    )
+    slug = models.SlugField(
+        unique=True,
+        verbose_name='Слаг',
+        help_text='Уникальный фрагмент URL-адреса',
+    )
+
+    class Meta:
+        ordering = ('name', )
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Genre(models.Model):
+    name = models.CharField(
+        max_length=256,
+        verbose_name='Жанр',
+        help_text='Название жанра, к которому относится произведение'
+    )
+    slug = models.SlugField(
+        unique=True,
+        verbose_name='Слаг',
+        help_text='Уникальный фрагмент URL-адреса'
+    )
+
+    class Meta:
+        ordering = ('name', )
+        verbose_name = 'Жанр',
+        verbose_name_plural = 'Жанры'
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Title(models.Model):
+    name = models.CharField(
+        max_length=256,
+        verbose_name='Произведение',
+        help_text='Название произведения'
+    )
+    year = models.PositiveIntegerField(
+        validators=[
+            MinValueValidator(1600),
+            MaxValueValidator(datetime.now().year),
+        ],
+        verbose_name='Год',
+        help_text='Используйте формат для года <YYYY>',
+        db_index=True
+    )
+    description = models.TextField(
+        max_length=2000,
+        verbose_name='Описание',
+        help_text='Краткое содержание произведения',
+        blank=True,
+        null=True,
+    )
+    genre = models.ManyToManyField(
+        'Genre',
+        related_name='titles',
+        through='GenreTitle',
+        verbose_name='Жанр',
+        help_text='Название жанра, к которому относится произведение',
+    )
+    category = models.ForeignKey(
+        'Category',
+        verbose_name='Категория',
+        help_text='Название категории, к которому относится произведение',
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+
+    class Meta:
+        ordering = ('name', )
+        verbose_name = 'Произведение'
+        verbose_name_plural = 'Произведения'
+
+    def __str__(self):
+        return self.name
+
+
+class CreatedModel(models.Model):
+    pub_date = models.DateTimeField(
+        'дата создания',
+        auto_now_add=True
+    )
+
+    class Meta:
+        abstract = True
+
+
+class GenreTitle(models.Model):
+    title = models.ForeignKey(
+        Title,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name='titles',
+        verbose_name='Произведение',
+    )
+    genre = models.ForeignKey(
+        Genre,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='genres',
+        verbose_name='Жанр',
+    )
+
+    class Meta:
+        ordering = ('title', 'genre')
+        verbose_name = 'Произведение и жанр'
+        verbose_name_plural = 'Произведения и жанры'
 
 
 class Review(models.Model):
