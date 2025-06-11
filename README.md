@@ -1,5 +1,87 @@
 # YaMDb
 
+**YaMDb** is a backend service for collecting reviews on works of art. Users can leave reviews, rate items, and discuss opinions with others.
+
+## Description
+
+The YaMDb project collects user reviews on works from various categories: movies, books, music, and more. The works themselves are not stored. Users can leave reviews, comments, and assign ratings from 1 to 10. Based on the ratings, each work receives an overall score.
+
+## Key Features
+
+- User registration and authentication via email and JWT tokens.
+- Access levels:
+  - Anonymous users — read-only access.
+  - Authenticated users — create/edit their own reviews and comments.
+  - Moderator — manage others' reviews and comments.
+  - Administrator — full access to all data and users.
+- API endpoints:
+  - **Titles** — works of art
+  - **Categories** — categories of works
+  - **Genres** — genres
+  - **Reviews** — user reviews for works
+  - **Comments** — comments on reviews
+  - **Users** — user management
+  - **Auth** — registration and token issuance
+
+## Technologies
+
+- Python 3.10+
+- Django 3.2.25
+- Django REST Framework
+- JWT (djangorestframework-simplejwt)
+- SQLite / PostgreSQL
+- CSV data import via management command
+
+## Installation and Launch
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/api_yamdb.git
+   cd api_yamdb
+   ```
+
+2. Create and activate a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Apply migrations:
+   ```bash
+   python manage.py migrate
+   ```
+
+5. (Optional) Load test data:
+   ```bash
+   python manage.py import_csv
+   ```
+
+6. Run the server:
+   ```bash
+   python manage.py runserver
+   ```
+
+7. API documentation will be available at:
+   ```
+   http://127.0.0.1:8000/redoc/
+   ```
+
+## Project Team
+
+- **Timofey** — authentication, registration, token system.
+- **Nikita** — models and API for titles, categories, genres, data import.
+- **Vsevolod** — team lead, developed reviews, comments, and rating system.
+
+<details>
+<summary>🇷🇺 Нажмите, чтобы раскрыть описание на русском</summary>
+
+# YaMDb
+
 **YaMDb** — это бэкенд-сервис для сбора отзывов на произведения искусства. Здесь можно оставлять рецензии, ставить оценки и обсуждать мнения других пользователей.
 
 ## Описание
@@ -77,6 +159,4 @@
 - **Никита** — модели и API для произведений, категорий, жанров, импорт данных.
 - **Всеволод** — тимлид, разработка отзывов, комментариев и рейтингов.
 
----
-
-© 2025 YaMDb Project — учебный проект в рамках курса Яндекс Практикум.
+</details>
