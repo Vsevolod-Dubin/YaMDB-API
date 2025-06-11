@@ -74,8 +74,13 @@ The YaMDb project collects user reviews on works from various categories: movies
 ## Project Team
 
 - **Timofey** — authentication, registration, token system.
+https://github.com/pahomdze
+
 - **Nikita** — models and API for titles, categories, genres, data import.
+https://github.com/NikitaUkhalov
+
 - **Vsevolod** — team lead, developed reviews, comments, and rating system.
+https://github.com/Vsevolod-Dubin/
 
 <details>
 <summary>🇷🇺 Нажмите, чтобы раскрыть описание на русском</summary>
@@ -156,7 +161,12 @@ The YaMDb project collects user reviews on works from various categories: movies
 ## Команда проекта
 
 - **Тимофей** — разработка системы аутентификации, регистрации, токенов.
+https://github.com/pahomdze
+
 - **Никита** — модели и API для произведений, категорий, жанров, импорт данных.
+https://github.com/NikitaUkhalov
+
 - **Всеволод** — тимлид, разработка отзывов, комментариев и рейтингов.
+https://github.com/Vsevolod-Dubin/
 
 </details>
