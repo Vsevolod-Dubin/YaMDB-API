@@ -1,23 +1,25 @@
 from django.db.models import Avg
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, mixins, viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.shortcuts import get_object_or_404
-from django.db import transaction
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from api.filters import TitleFilter
 from api.serializers import (
     CategorySerializer,
+    CommentSerializer,
     GenreSerializer,
+    ReviewSerializer,
     TitleCreateSerializer,
     TitleSerializer,
-    CommentSerializer,
-    ReviewSerializer
 )
+from reviews.models import Category, Genre, Review, Title
+from users.permissions import (
+    IsAdminOrReadOnly,
+    IsAuthorOrModeratorOrAdminOrReadOnly,
+)
+
 from .base_viewsets import GroupBaseViewSet
-from reviews.models import Category, Genre, Title, Review, Title
-from users.permissions import IsAuthorOrModeratorOrAdminOrReadOnly
-from users.permissions import IsAdminOrReadOnly
 
 
 class CategoryViewSet(GroupBaseViewSet):
@@ -94,14 +96,14 @@ class CommentViewSet(viewsets.ModelViewSet):
         IsAuthenticatedOrReadOnly,
         IsAuthorOrModeratorOrAdminOrReadOnly,
     ]
-    http_method_names = ['get', 'post', 'patch', 'delete']
+    http_method_names = ["get", "post", "patch", "delete"]
     lookup_field = "id"
 
     def get_review(self):
         return get_object_or_404(
             Review,
             id=self.kwargs.get("review_id"),
-            title__id=self.kwargs.get("title_id")
+            title__id=self.kwargs.get("title_id"),
         )
 
     def get_queryset(self):

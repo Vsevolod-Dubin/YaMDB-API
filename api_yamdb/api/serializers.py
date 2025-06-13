@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from reviews.models import Category, Genre, Title, Review, Comment
+from reviews.models import Category, Comment, Genre, Review, Title
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -44,9 +44,9 @@ class TitleCreateSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        action = self.context['view'].action
-        if action not in ['list', 'retrieve']:
-            representation.pop('rating')
+        action = self.context["view"].action
+        if action not in ["list", "retrieve"]:
+            representation.pop("rating")
         return representation
 
 
@@ -68,7 +68,8 @@ class ReviewSerializer(serializers.ModelSerializer):
         if (
             request.method == "POST"
             and Review.objects.filter(
-                title_id=title_id, author=author).exists()
+                title_id=title_id, author=author
+            ).exists()
         ):
             raise serializers.ValidationError(
                 "Вы уже оставили отзыв на это произведение."

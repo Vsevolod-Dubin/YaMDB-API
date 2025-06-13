@@ -4,10 +4,10 @@ from rest_framework_nested.routers import NestedDefaultRouter
 
 from api.views import (
     CategoryViewSet,
-    GenreViewSet,
-    TitleViewSet,
-    ReviewViewSet,
     CommentViewSet,
+    GenreViewSet,
+    ReviewViewSet,
+    TitleViewSet,
 )
 from users.views import AuthViewSet, UserViewSet
 
