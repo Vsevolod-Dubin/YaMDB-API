@@ -1,12 +1,10 @@
-# reviews/serializers.py
-
 from rest_framework import serializers
 
 from reviews.models import Comment, Review, Title
 
 
 class TitleSerializer(serializers.ModelSerializer):
-    rating = serializers.IntegerField(read_only=True)
+    rating = serializers.IntegerField(default=None, read_only=True)
 
     class Meta:
         model = Title

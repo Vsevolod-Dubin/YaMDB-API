@@ -4,68 +4,59 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
+from .constants import NAME_MAX_LENGTH
+from .validators import validate_year
+
+
 User = get_user_model()
 
 
-class Category(models.Model):
+class GroupBaseModel(models.Model):
     name = models.CharField(
-        max_length=256,
-        verbose_name="Категория",
-        help_text="Название категории, к которой относится произведение",
+        max_length=NAME_MAX_LENGTH,
+        unique=True,
+        verbose_name="Название",
+        help_text="Название элемента",
     )
     slug = models.SlugField(
         unique=True,
         verbose_name="Слаг",
         help_text="Уникальный фрагмент URL-адреса",
     )
-
+    
     class Meta:
+        abstract = True
         ordering = ("name",)
+    
+    def __str__(self) -> str:
+        return self.name 
+
+
+class Category(GroupBaseModel):
+    class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
 
-    def __str__(self) -> str:
-        return self.name
 
-
-class Genre(models.Model):
-    name = models.CharField(
-        max_length=256,
-        verbose_name="Жанр",
-        help_text="Название жанра, к которому относится произведение",
-    )
-    slug = models.SlugField(
-        unique=True,
-        verbose_name="Слаг",
-        help_text="Уникальный фрагмент URL-адреса",
-    )
-
+class Genre(GroupBaseModel):
     class Meta:
-        ordering = ("name",)
         verbose_name = ("Жанр",)
         verbose_name_plural = "Жанры"
-
-    def __str__(self) -> str:
-        return self.name
 
 
 class Title(models.Model):
     name = models.CharField(
-        max_length=256,
+        max_length=NAME_MAX_LENGTH,
         verbose_name="Произведение",
         help_text="Название произведения",
     )
-    year = models.PositiveIntegerField(
-        validators=[
-            MinValueValidator(1600),
-            MaxValueValidator(datetime.now().year),
-        ],
+    year = models.SmallIntegerField(
+        validators=[validate_year],
         verbose_name="Год",
         help_text="Используйте формат для года <YYYY>",
         db_index=True,
     )
     description = models.TextField(
-        max_length=2000,
         verbose_name="Описание",
         help_text="Краткое содержание произведения",
         blank=True,
