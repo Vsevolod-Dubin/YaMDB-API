@@ -6,7 +6,6 @@ from django.shortcuts import get_object_or_404
 from django.db import transaction
 
 from api.filters import TitleFilter
-from api.permissions import TitlePermission
 from api.serializers import (
     CategorySerializer,
     GenreSerializer,
@@ -15,34 +14,27 @@ from api.serializers import (
     CommentSerializer,
     ReviewSerializer
 )
+from .base_viewsets import GroupBaseViewSet
 from reviews.models import Category, Genre, Title, Review, Title
 from users.permissions import IsAuthorOrModeratorOrAdminOrReadOnly
+from users.permissions import IsAdminOrReadOnly
 
 
-class CreateDestroyViewSet(
-    mixins.CreateModelMixin,
-    mixins.ListModelMixin,
-    mixins.DestroyModelMixin,
-    viewsets.GenericViewSet,
-):
-    pass
-
-
-class CategoryViewSet(CreateDestroyViewSet):
+class CategoryViewSet(GroupBaseViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ("name",)
-    permission_classes = (TitlePermission,)
+    permission_classes = (IsAdminOrReadOnly,)
     lookup_field = "slug"
 
 
-class GenreViewSet(CreateDestroyViewSet):
+class GenreViewSet(GroupBaseViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ("name",)
-    permission_classes = (TitlePermission,)
+    permission_classes = (IsAdminOrReadOnly,)
     lookup_field = "slug"
 
 
@@ -55,7 +47,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     serializer_class = TitleSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
-    permission_classes = (TitlePermission,)
+    permission_classes = (IsAdminOrReadOnly,)
     http_method_names = ["get", "post", "delete", "patch"]
     lookup_field = "id"
 

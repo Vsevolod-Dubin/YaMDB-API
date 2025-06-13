@@ -24,25 +24,30 @@ class TitleSerializer(serializers.ModelSerializer):
         fields = "__all__"
         model = Title
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        action = self.context["view"].action
-        if action not in ["list", "retrieve"]:
-            representation.pop("rating")
-        return representation
-
 
 class TitleCreateSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(
         slug_field="slug", queryset=Category.objects.all()
     )
     genre = serializers.SlugRelatedField(
-        slug_field="slug", many=True, queryset=Genre.objects.all()
+        slug_field="slug",
+        many=True,
+        queryset=Genre.objects.all(),
+        allow_null=False,
+        allow_empty=False,
     )
+    rating = serializers.IntegerField(default=None, read_only=True)
 
     class Meta:
         fields = "__all__"
         model = Title
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        action = self.context['view'].action
+        if action not in ['list', 'retrieve']:
+            representation.pop('rating')
+        return representation
 
 
 class ReviewSerializer(serializers.ModelSerializer):
