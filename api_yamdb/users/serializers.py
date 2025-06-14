@@ -1,12 +1,14 @@
 import re
-from django.core.validators import RegexValidator
+
 from django.core.mail import send_mail
+from django.core.validators import RegexValidator
 from django.contrib.auth.tokens import default_token_generator
+
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from users.constants import EMAIL_MAX_LENGTH, USERNAME_MAX_LENGTH
 from users.models import User
-from users.constants import USERNAME_MAX_LENGTH, EMAIL_MAX_LENGTH
 
 
 class SignupSerializer(serializers.Serializer):

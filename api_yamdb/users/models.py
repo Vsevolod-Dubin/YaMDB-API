@@ -1,4 +1,5 @@
 import re
+
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.exceptions import ValidationError
@@ -48,7 +49,7 @@ class User(AbstractUser):
         verbose_name='Статус сотрудника',
 
     )
-    
+
     def save(self, *args, **kwargs):
         if self.role == self.ADMIN:
             self.is_staff = True
