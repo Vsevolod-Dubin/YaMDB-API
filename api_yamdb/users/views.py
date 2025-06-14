@@ -1,17 +1,19 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
+
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
-from users.models import User
 from users.permissions import IsAdmin
+from users.serializers import SignupSerializer, TokenSerializer, UserSerializer
 
-from .serializers import SignupSerializer, TokenSerializer, UserSerializer
+User = get_user_model()
+
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -21,9 +23,6 @@ class UserViewSet(viewsets.ModelViewSet):
     lookup_field = "username"
     filter_backends = (filters.SearchFilter,)
     search_fields = ("username",)
-
-    def partial_update(self, request, *args, **kwargs):
-        return super().partial_update(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
         if request.method == "PUT":
@@ -52,37 +51,17 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class AuthViewSet(viewsets.GenericViewSet):
-    serializer_class = SignupSerializer
-    permission_classes = []
+    permission_classes = [AllowAny]
 
     @action(methods=["post"], detail=False, url_path="signup")
     def signup(self, request):
-        serializer = self.get_serializer(data=request.data)
+        serializer = SignupSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
-        username = serializer.validated_data["username"]
-        email = serializer.validated_data["email"]
-
-        try:
-            user = User.objects.get(username=username)
-            if user.email != email:
-                raise ValidationError(
-                    {"email": "Пользователь с таким username уже существует."}
-                )
-        except User.DoesNotExist:
-            user = User.objects.create(username=username, email=email)
-
-        confirmation_code = default_token_generator.make_token(user)
-
-        send_mail(
-            subject="Код подтверждения YaMDb",
-            message=f"Ваш код подтверждения: {confirmation_code}",
-            from_email="yamdb@mail.ru",
-            recipient_list=[email],
-            fail_silently=False,
-        )
-
-        return Response({"email": email, "username": username})
+        user = serializer.save()
+        return Response({
+            "email": user.email,
+            "username": user.username
+        })
 
     @action(methods=["post"], detail=False, url_path="token")
     def token(self, request):
