@@ -5,19 +5,12 @@ from rest_framework import filters, viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from api.filters import TitleFilter
-from api.serializers import (
-    CategorySerializer,
-    CommentSerializer,
-    GenreSerializer,
-    ReviewSerializer,
-    TitleCreateSerializer,
-    TitleSerializer,
-)
+from api.serializers import (CategorySerializer, CommentSerializer,
+                             GenreSerializer, ReviewSerializer,
+                             TitleCreateSerializer, TitleSerializer)
 from reviews.models import Category, Genre, Review, Title
-from users.permissions import (
-    IsAdminOrReadOnly,
-    IsAuthorOrModeratorOrAdminOrReadOnly,
-)
+from users.permissions import (IsAdminOrReadOnly,
+                               IsAuthorOrModeratorOrAdminOrReadOnly)
 
 from .base_viewsets import GroupBaseViewSet
 

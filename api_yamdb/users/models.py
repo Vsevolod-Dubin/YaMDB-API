@@ -7,7 +7,6 @@ from django.db import models
 
 from users.constants import EMAIL_MAX_LENGTH, USERNAME_MAX_LENGTH
 
-
 username_validator = UnicodeUsernameValidator()
 
 
