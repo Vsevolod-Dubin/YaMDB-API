@@ -15,7 +15,6 @@ from users.serializers import SignupSerializer, TokenSerializer, UserSerializer
 User = get_user_model()
 
 
-
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by("username")
     serializer_class = UserSerializer
