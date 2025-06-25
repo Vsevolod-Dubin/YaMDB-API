@@ -28,19 +28,11 @@ User = get_user_model()
 class CategoryViewSet(GroupBaseViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ("name",)
-    permission_classes = (IsAdminOrReadOnly,)
-    lookup_field = "slug"
 
 
 class GenreViewSet(GroupBaseViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ("name",)
-    permission_classes = (IsAdminOrReadOnly,)
-    lookup_field = "slug"
 
 
 class TitleViewSet(viewsets.ModelViewSet):

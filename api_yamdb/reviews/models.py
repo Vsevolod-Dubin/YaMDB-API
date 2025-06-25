@@ -2,7 +2,8 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-from .constants import MAX_REVIEW_SCORE, MIN_REVIEW_SCORE, NAME_MAX_LENGTH
+from .constants import (MAX_REVIEW_SCORE, MIN_REVIEW_SCORE,
+                        NAME_MAX_LENGTH, SLUG_MAX_LENGTH)
 from .validators import validate_year
 
 User = get_user_model()
@@ -16,6 +17,7 @@ class GroupBaseModel(models.Model):
         help_text="Название элемента",
     )
     slug = models.SlugField(
+        max_length=SLUG_MAX_LENGTH,
         unique=True,
         verbose_name="Слаг",
         help_text="Уникальный фрагмент URL-адреса",
@@ -36,7 +38,7 @@ class Category(GroupBaseModel):
 
 
 class Genre(GroupBaseModel):
-    class Meta:
+    class Meta(GroupBaseModel.Meta):
         verbose_name = ("Жанр",)
         verbose_name_plural = "Жанры"
 
@@ -57,7 +59,6 @@ class Title(models.Model):
         verbose_name="Описание",
         help_text="Краткое содержание произведения",
         blank=True,
-        null=True,
     )
     genre = models.ManyToManyField(
         "Genre",
