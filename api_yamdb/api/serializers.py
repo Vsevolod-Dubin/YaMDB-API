@@ -2,13 +2,12 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError, NotFound
+from rest_framework.exceptions import NotFound, ValidationError
 
 from api_yamdb.settings import DEFAULT_FROM_EMAIL
+from reviews.models import Category, Comment, Genre, Review, Title
 from users.constants import EMAIL_MAX_LENGTH, USERNAME_MAX_LENGTH
 from users.validators import validate_username
-from reviews.models import Category, Comment, Genre, Review, Title
-
 
 User = get_user_model()
 
