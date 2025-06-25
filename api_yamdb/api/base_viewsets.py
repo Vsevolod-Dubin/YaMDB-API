@@ -1,4 +1,5 @@
-from rest_framework import mixins, viewsets
+from api.permissions import IsAdminOrReadOnly
+from rest_framework import filters, mixins, viewsets
 
 
 class GroupBaseViewSet(
@@ -7,4 +8,7 @@ class GroupBaseViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    pass
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("name",)
+    permission_classes = (IsAdminOrReadOnly,)
+    lookup_field = "slug"

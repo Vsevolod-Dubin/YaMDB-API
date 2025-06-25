@@ -54,6 +54,9 @@ class TitleCreateSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         action = self.context["view"].action
+        title_serializer = TitleSerializer(instance)
+        title_data = title_serializer.data
+        representation.update(title_data)
         if action not in ["list", "retrieve"]:
             representation.pop("rating")
         return representation
