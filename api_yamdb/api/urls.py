@@ -2,9 +2,8 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from rest_framework_nested.routers import NestedDefaultRouter
 
-from api.views import (CategoryViewSet, CommentViewSet, GenreViewSet,
-                       ReviewViewSet, TitleViewSet,
-                       AuthViewSet, UserViewSet)
+from api.views import (AuthViewSet, CategoryViewSet, CommentViewSet,
+                       GenreViewSet, ReviewViewSet, TitleViewSet, UserViewSet)
 
 router = DefaultRouter()
 router.register("titles", TitleViewSet)

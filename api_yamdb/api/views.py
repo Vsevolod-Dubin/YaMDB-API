@@ -3,26 +3,24 @@ from django.contrib.auth.tokens import default_token_generator
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, status, viewsets
+from rest_framework import filters, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import (IsAuthenticatedOrReadOnly,
-                                        AllowAny, IsAuthenticated)
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import (AllowAny, IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
-from api.permissions import (IsAdminOrReadOnly,
-                             IsAdmin,
-                             IsAuthorOrModeratorOrAdminOrReadOnly)
 from api.filters import TitleFilter
+from api.permissions import (IsAdmin, IsAdminOrReadOnly,
+                             IsAuthorOrModeratorOrAdminOrReadOnly)
 from api.serializers import (CategorySerializer, CommentSerializer,
                              GenreSerializer, ReviewSerializer,
-                             TitleCreateSerializer, TitleSerializer,
-                             SignupSerializer, TokenSerializer, UserSerializer)
+                             SignupSerializer, TitleCreateSerializer,
+                             TitleSerializer, TokenSerializer, UserSerializer)
 from reviews.models import Category, Genre, Review, Title
 
 from .base_viewsets import GroupBaseViewSet
-
 
 User = get_user_model()
 
