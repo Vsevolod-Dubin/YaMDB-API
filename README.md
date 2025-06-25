@@ -83,7 +83,8 @@ https://github.com/NikitaUkhalov
 https://github.com/Vsevolod-Dubin/
 
 <details>
-<summary>🇷🇺 Нажмите, чтобы раскрыть описание на русском</summary>
+<summary>Нажмите, чтобы раскрыть описание на русском</summary>
+
 
 # YaMDb
 
