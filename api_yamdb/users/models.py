@@ -25,7 +25,8 @@ class User(AbstractUser):
                    '@/./+/-/_. Имя "me" запрещено.')
     )
     email = models.EmailField(max_length=EMAIL_MAX_LENGTH, unique=True)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=USER)
+    role = models.CharField(max_length=USERNAME_MAX_LENGTH,
+                            choices=ROLE_CHOICES, default=USER)
     bio = models.TextField(blank=True)
     is_staff = models.BooleanField(
         default=False,

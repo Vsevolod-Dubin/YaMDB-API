@@ -30,7 +30,7 @@ class GroupBaseModel(models.Model):
 
 
 class Category(GroupBaseModel):
-    class Meta:
+    class Meta(GroupBaseModel.Meta):
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
 
@@ -57,7 +57,6 @@ class Title(models.Model):
         verbose_name="Описание",
         help_text="Краткое содержание произведения",
         blank=True,
-        null=True,
     )
     genre = models.ManyToManyField(
         "Genre",

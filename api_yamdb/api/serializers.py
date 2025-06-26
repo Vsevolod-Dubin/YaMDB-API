@@ -52,11 +52,7 @@ class TitleCreateSerializer(serializers.ModelSerializer):
         model = Title
 
     def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        action = self.context["view"].action
-        if action not in ["list", "retrieve"]:
-            representation.pop("rating")
-        return representation
+        return TitleSerializer(instance).data
 
 
 class ReviewSerializer(serializers.ModelSerializer):
