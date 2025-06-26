@@ -1,11 +1,9 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.tokens import default_token_generator
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
@@ -163,15 +161,7 @@ class AuthViewSet(viewsets.GenericViewSet):
         serializer = TokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        username = serializer.validated_data["username"]
-        confirmation_code = serializer.validated_data["confirmation_code"]
-
-        user = get_object_or_404(User, username=username)
-
-        if not default_token_generator.check_token(user, confirmation_code):
-            raise ValidationError(
-                {"confirmation_code": "Неверный код подтверждения"}
-            )
+        user = serializer.validated_data["user"]
 
         token = AccessToken.for_user(user)
         return Response({"token": str(token)})
